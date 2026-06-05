@@ -77,7 +77,7 @@ const projects = [
       "Integracion de trazabilidad patrimonial y cartografia operativa para monitoreo de activos a escala regional.",
     sortOrder: 1,
     content: {
-      category: "Geospatial",
+      category: "Geoespacial",
       impact: "Reduccion del 42% en tiempos de verificacion territorial y consolidacion de reportes automatizados.",
       stack: ["PostGIS", "Next.js", "Prisma", "Leaflet", "Docker"],
       link: "#",
@@ -90,7 +90,7 @@ const projects = [
       "Arquitectura de servicios desacoplados para catalogos, escenarios tarifarios y flujos contables forestales.",
     sortOrder: 2,
     content: {
-      category: "Software Architecture",
+      category: "Arquitectura Software",
       impact: "Escalabilidad horizontal en picos de procesamiento y despliegues continuos con menor riesgo.",
       stack: ["Node.js", "PostgreSQL", "Redis", "OpenAPI", "GitHub Actions"],
       link: "#",
@@ -103,7 +103,7 @@ const projects = [
       "Pipeline de ciencia de datos para estimaciones, alertas y modelos comparativos de comportamiento ambiental.",
     sortOrder: 3,
     content: {
-      category: "Data Analytics",
+      category: "Analisis Datos",
       impact: "Mayor precision de decisiones tecnicas mediante tableros con indicadores interpretables por negocio.",
       stack: ["Python", "Pandas", "Earth Engine", "dbt", "Power BI"],
       link: "#",
@@ -115,7 +115,7 @@ const projects = [
     description: "Visualizacion avanzada con capas dinamicas, recortes BBOX y prioridades de atencion territorial.",
     sortOrder: 4,
     content: {
-      category: "Geospatial",
+      category: "Geoespacial",
       impact: "Respuesta operativa 30% mas rapida en intervenciones de campo y seguimiento de incidencias.",
       stack: ["Mapbox", "PostGIS", "React", "TypeScript", "Kubernetes"],
       link: "#",
@@ -128,7 +128,7 @@ const projects = [
       "Modelo de referencia para equipos mixtos de producto, datos e infraestructura con enfoque de mantenibilidad.",
     sortOrder: 5,
     content: {
-      category: "Software Architecture",
+      category: "Arquitectura Software",
       impact: "Reduccion de deuda tecnica en integraciones y mayor velocidad de entrega de funcionalidades.",
       stack: ["Clean Architecture", "DDD", "Zod", "Prisma", "TurboRepo"],
       link: "#",
@@ -141,7 +141,7 @@ const projects = [
       "Modelo de scoring para priorizar acciones sobre activos forestales segun variables satelitales y de campo.",
     sortOrder: 6,
     content: {
-      category: "Data Analytics",
+      category: "Analisis Datos",
       impact: "Priorizacion de recursos basada en evidencia con aumento en eficacia de planes de intervencion.",
       stack: ["Python", "Scikit-learn", "PostgreSQL", "Airflow", "Grafana"],
       link: "#",

@@ -80,9 +80,9 @@ Sección central del sitio con tarjetas dinámicas de proyectos en grid de 2 o 3
 
 #### Filtros sugeridos
 
-- Geospatial
-- Software Architecture
-- Data Analytics
+- Geoespacial
+- Arquitectura Software
+- Analisis Datos
 
 #### Cada tarjeta debe incluir
 

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ThemeToggle } from "./components/theme-toggle";
 
-type ProjectCategory = "Geospatial" | "Software Architecture" | "Data Analytics";
+type ProjectCategory = "Geoespacial" | "Arquitectura Software" | "Analisis Datos";
 type LandingSection = "expertise" | "projects" | "events" | "articles" | "timeline" | "certifications";
 
 type LandingEntry = {
@@ -220,12 +220,12 @@ export default function Home() {
   const timeline = data?.sections.timeline ?? [];
   const certifications = data?.sections.certifications ?? [];
 
-  const categories: Array<"All" | ProjectCategory> = ["All", "Geospatial", "Software Architecture", "Data Analytics"];
+  const categories: Array<"All" | ProjectCategory> = ["All", "Geoespacial", "Arquitectura Software", "Analisis Datos"];
 
   const filteredProjects = projects.filter((entry) => {
     if (activeCategory === "All") return true;
     const content = readContentObject(entry.content);
-    return readContentString(content, "category", "Geospatial") === activeCategory;
+    return readContentString(content, "category", "Geoespacial") === activeCategory;
   });
 
   const selectedEvent = events[activeEvent] || null;
@@ -325,7 +325,7 @@ export default function Home() {
         <section id="servicios" className="space-y-8">
           <div className="space-y-3">
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Propuesta de valor</p>
-            <h2 className="section-title text-3xl font-semibold md:text-4xl">Expertise Grid</h2>
+            <h2 className="section-title text-3xl font-semibold md:text-4xl">Competencias</h2>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -350,7 +350,7 @@ export default function Home() {
 
         <section id="portafolio" className="space-y-8">
           <div className="space-y-3">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Featured projects</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Proyectos Destacados</p>
             <h2 className="section-title text-3xl font-semibold md:text-4xl">Portafolio de Soluciones</h2>
           </div>
 
@@ -380,7 +380,7 @@ export default function Home() {
                 <article key={entry.id} className="glass-panel rounded-2xl p-6">
                   <EntryMedia content={content} alt={entry.title} className="mb-4 h-44 w-full rounded-xl object-cover" />
                   <p className="mb-2 font-mono text-xs uppercase tracking-[0.12em] text-cyan-300">
-                    {readContentString(content, "category", "Geospatial")}
+                    {readContentString(content, "category", "Geoespacial")}
                   </p>
                   <h3 className="mb-3 text-xl font-semibold">{entry.title}</h3>
                   <p className="mb-3 text-sm text-slate-300">{entry.description}</p>
@@ -403,7 +403,7 @@ export default function Home() {
 
         <section className="space-y-8">
           <div className="space-y-3">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Featured media & events</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Medios y Eventos</p>
             <h2 className="section-title text-3xl font-semibold md:text-4xl">Eventos y Ponencias Tecnicas</h2>
           </div>
 
@@ -480,7 +480,7 @@ export default function Home() {
 
         <section className="space-y-8">
           <div className="space-y-3">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Insights & publications</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-300">Insights & publicaciones</p>
             <h2 className="section-title text-3xl font-semibold md:text-4xl">Pensamiento Critico y Divulgacion</h2>
           </div>
 
