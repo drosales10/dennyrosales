@@ -86,6 +86,34 @@ function inferMediaType(url: string) {
   return "image/jpeg";
 }
 
+function toYouTubeEmbedUrl(url: string) {
+  if (!url) return "";
+
+  try {
+    const parsedUrl = new URL(url);
+    const hostname = parsedUrl.hostname.replace(/^www\./, "");
+
+    if (hostname === "youtu.be") {
+      const videoId = parsedUrl.pathname.split("/").filter(Boolean)[0];
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    }
+
+    if (hostname.endsWith("youtube.com")) {
+      if (parsedUrl.pathname.startsWith("/embed/")) return url;
+
+      const embedId = parsedUrl.pathname.startsWith("/shorts/")
+        ? parsedUrl.pathname.split("/").filter(Boolean)[1]
+        : parsedUrl.searchParams.get("v");
+
+      return embedId ? `https://www.youtube.com/embed/${embedId}` : url;
+    }
+  } catch {
+    return url;
+  }
+
+  return url;
+}
+
 function Media({
   url,
   mimeType,
@@ -202,6 +230,7 @@ export default function Home() {
 
   const selectedEvent = events[activeEvent] || null;
   const selectedEventContent = readContentObject(selectedEvent?.content);
+  const selectedEventVideoUrl = toYouTubeEmbedUrl(readContentString(selectedEventContent, "videoUrl"));
 
   const heroMediaUrl = hero.rightMediaUrl || "";
   const heroMediaType = hero.rightMediaType || (heroMediaUrl ? inferMediaType(heroMediaUrl) : "");
@@ -383,9 +412,9 @@ export default function Home() {
               <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
                 <div className="glass-panel overflow-hidden rounded-2xl p-3">
                   <div className="aspect-video overflow-hidden rounded-xl">
-                    {readContentString(selectedEventContent, "videoUrl") ? (
+                    {selectedEventVideoUrl ? (
                       <iframe
-                        src={readContentString(selectedEventContent, "videoUrl")}
+                        src={selectedEventVideoUrl}
                         title={selectedEvent.title}
                         className="h-full w-full"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
