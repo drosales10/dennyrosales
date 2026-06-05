@@ -161,6 +161,7 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState<"All" | ProjectCategory>("All");
   const [activeEvent, setActiveEvent] = useState(0);
   const [data, setData] = useState<PublicLandingResponse | null>(null);
+  const [selectedCertificateIndex, setSelectedCertificateIndex] = useState<number | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -219,6 +220,59 @@ export default function Home() {
   const articles = data?.sections.articles ?? [];
   const timeline = data?.sections.timeline ?? [];
   const certifications = data?.sections.certifications ?? [];
+
+  const certificatesWithImage = useMemo(
+    () =>
+      certifications
+        .map((entry) => {
+          const content = readContentObject(entry.content);
+          const imageUrl = readContentString(content, "imageUrl");
+          if (!imageUrl) return null;
+
+          return {
+            id: entry.id,
+            title: entry.title,
+            imageUrl,
+            imageMimeType: readContentString(content, "imageMimeType", inferMediaType(imageUrl)),
+          };
+        })
+        .filter((item): item is { id: string; title: string; imageUrl: string; imageMimeType: string } => Boolean(item)),
+    [certifications],
+  );
+
+  const selectedCertificate =
+    selectedCertificateIndex === null ? null : (certificatesWithImage[selectedCertificateIndex] ?? null);
+
+  useEffect(() => {
+    if (!selectedCertificate) return;
+
+    const handleKeyboard = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedCertificateIndex(null);
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        setSelectedCertificateIndex((current) => {
+          if (current === null || certificatesWithImage.length === 0) return current;
+          return (current + 1) % certificatesWithImage.length;
+        });
+      }
+
+      if (event.key === "ArrowLeft") {
+        setSelectedCertificateIndex((current) => {
+          if (current === null || certificatesWithImage.length === 0) return current;
+          return (current - 1 + certificatesWithImage.length) % certificatesWithImage.length;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyboard);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyboard);
+    };
+  }, [selectedCertificate, certificatesWithImage.length]);
 
   const categories: Array<"All" | ProjectCategory> = ["All", "Geoespacial", "Arquitectura Software", "Analisis Datos"];
 
@@ -532,16 +586,31 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-3 text-xs text-slate-200 sm:grid-cols-3">
                 {certifications.map((entry) => {
                   const certificationContent = readContentObject(entry.content);
+                  const hasCertificateImage = Boolean(readContentString(certificationContent, "imageUrl"));
+                  const certificateIndex = certificatesWithImage.findIndex((item) => item.id === entry.id);
 
                   return (
-                    <span key={entry.id} className="rounded-lg border border-slate-600/70 px-3 py-2 text-center">
+                    <button
+                      key={entry.id}
+                      type="button"
+                      onClick={() => {
+                        if (!hasCertificateImage || certificateIndex < 0) return;
+                        setSelectedCertificateIndex(certificateIndex);
+                      }}
+                      disabled={!hasCertificateImage}
+                      className={`rounded-lg border border-slate-600/70 px-3 py-2 text-center transition ${
+                        hasCertificateImage
+                          ? "hover:border-cyan-300/80"
+                          : "cursor-not-allowed opacity-70"
+                      }`}
+                    >
                       <EntryMedia
                         content={certificationContent}
                         alt={entry.title}
                         className="mb-2 h-24 w-full rounded-md object-cover"
                       />
                       <span>{entry.title}</span>
-                    </span>
+                    </button>
                   );
                 })}
               </div>
@@ -587,6 +656,74 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {selectedCertificate ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 px-4 py-6"
+          onClick={() => setSelectedCertificateIndex(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedCertificate.title}
+        >
+          <div
+            className="relative w-full max-w-5xl rounded-2xl border border-slate-700/80 bg-slate-900/80 p-3"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCertificateIndex((current) => {
+                  if (current === null || certificatesWithImage.length === 0) return current;
+                  return (current - 1 + certificatesWithImage.length) % certificatesWithImage.length;
+                });
+              }}
+              className="absolute left-3 top-3 rounded-full border border-slate-600 bg-slate-900/90 px-3 py-1 text-sm text-slate-200 hover:border-cyan-300 hover:text-cyan-200"
+              aria-label="Certificado anterior"
+            >
+              Anterior
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedCertificateIndex((current) => {
+                  if (current === null || certificatesWithImage.length === 0) return current;
+                  return (current + 1) % certificatesWithImage.length;
+                });
+              }}
+              className="absolute left-28 top-3 rounded-full border border-slate-600 bg-slate-900/90 px-3 py-1 text-sm text-slate-200 hover:border-cyan-300 hover:text-cyan-200"
+              aria-label="Siguiente certificado"
+            >
+              Siguiente
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSelectedCertificateIndex(null)}
+              className="absolute right-3 top-3 rounded-full border border-slate-600 bg-slate-900/90 px-3 py-1 text-sm text-slate-200 hover:border-cyan-300 hover:text-cyan-200"
+            >
+              Cerrar
+            </button>
+
+            <p className="mb-3 mt-10 text-center text-sm text-slate-300">
+              {selectedCertificate.title}
+              {selectedCertificateIndex !== null
+                ? ` · ${selectedCertificateIndex + 1}/${certificatesWithImage.length}`
+                : ""}
+            </p>
+
+            <div key={selectedCertificate.id} className="certificate-preview-enter">
+              <Media
+                url={selectedCertificate.imageUrl}
+                mimeType={selectedCertificate.imageMimeType}
+                className="max-h-[82vh] w-full rounded-xl object-contain"
+                alt={selectedCertificate.title}
+                controls={false}
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
