@@ -32,7 +32,6 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
-!.env.example
 
 # vercel
 .vercel
@@ -43,32 +42,6 @@ next-env.d.ts
 
 /src/generated/prisma
 
-/docs
-/scripts
-/internal-docs
-!/scripts/
-/scripts/*
-!/scripts/reset-mintlify-cache.ps1
-!/scripts/sync-mintlify-smyeg.mjs
-!/scripts/guard-admin-geo-route-collisions.mjs
-!/scripts/watch-admin-geo-route-collisions.ps1
-!/internal-docs/
-/internal-docs/*
-!/internal-docs/agents/
-!/internal-docs/agents/*.md
-/public/uploads
-# Squad: ignore runtime state (logs, inbox, sessions)
-.squad/orchestration-log/
-.squad/log/
-.squad/decisions/inbox/
-.squad/sessions/
-# Squad: SubSquad activation file (local to this machine)
-.squad-workstream
-.env.example
-/openspec
-.openspec
-.continue/*
-.copilot/*
-.github/*
-.mintlify/*
-.squad/*
+/.copilot/
+/.squad/
+/public/uploads/*

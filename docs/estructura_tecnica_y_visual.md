@@ -218,6 +218,22 @@ Dado que la guía operativa del repositorio está orientada a Next.js, React y T
 
 ## Backlog Inicial Sugerido
 
+## Estado de Ejecución
+
+- Fase 1. Base visual: completada.
+  - Definir tokens visuales: completado.
+  - Diseñar hero: completado.
+  - Diseñar navbar sticky: completado.
+  - Diseñar grid de expertise: completado.
+- Fase 2. Conversión: completada.
+  - Diseñar portafolio filtrable: completado.
+  - Diseñar sección de publicaciones: completado.
+  - Diseñar sección de eventos y videos: completado.
+- Fase 3. Credibilidad: completada.
+  - Diseñar timeline profesional: completado.
+  - Diseñar bloque de certificaciones: completado.
+  - Diseñar formulario de contacto: completado.
+
 ### Fase 1. Base visual
 
 - Definir tokens visuales
