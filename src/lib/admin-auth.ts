@@ -19,8 +19,8 @@ function getAdminSessionSecret() {
 }
 
 export function isValidAdminCredentials(username: string, password: string) {
-  const adminUser = process.env.ADMIN_USERNAME || "admin";
-  const adminPass = process.env.ADMIN_PASSWORD || "admin123";
+  const adminUser = process.env.ADMIN_USERNAME;
+  const adminPass = process.env.ADMIN_PASSWORD;
 
   return username === adminUser && password === adminPass;
 }
