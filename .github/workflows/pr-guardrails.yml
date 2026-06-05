@@ -1,0 +1,78 @@
+name: PR Guardrails
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+      - unlabeled
+
+permissions:
+  pull-requests: read
+
+jobs:
+  enforce-guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR labels and required checklist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const labels = (pr.labels || []).map(l => l.name || '');
+            const body = pr.body || '';
+
+            if (pr.draft) {
+              core.setFailed('PR blocked: draft pull requests cannot pass guardrails. Mark as "Ready for review" first.');
+              return;
+            }
+
+            const blockingNeeds = labels.filter(name => name.startsWith('needs:'));
+            if (blockingNeeds.length > 0) {
+              core.setFailed(
+                `PR blocked: remove pending labels before merge: ${blockingNeeds.join(', ')}`
+              );
+              return;
+            }
+
+            const requiredChecks = [
+              'pnpm lint',
+              'pnpm exec tsc --noEmit',
+              'pnpm test:all',
+              'pnpm build'
+            ];
+
+            const hasIssueRef =
+              /(?:^|\n)\s*-\s*Issue relacionado:\s*(?:#\d+|https?:\/\/[^\s]+)/i.test(body) ||
+              /\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#\d+\b/i.test(body) ||
+              /\B#\d+\b/.test(body);
+
+            if (!hasIssueRef) {
+              core.setFailed(
+                'PR blocked: include an issue reference in the PR body (e.g. "Issue relacionado: #123" or "Closes #123").'
+              );
+              return;
+            }
+
+            const missing = [];
+            for (const check of requiredChecks) {
+              const escaped = check.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              const pattern = new RegExp(`- \\[x\\]\\s+${escaped}`, 'i');
+              if (!pattern.test(body)) {
+                missing.push(check);
+              }
+            }
+
+            if (missing.length > 0) {
+              core.setFailed(
+                'PR blocked: required checklist items are not marked as done: ' +
+                missing.join(', ')
+              );
+              return;
+            }
+
+            core.info('PR guardrails passed: PR is ready for review, issue reference present, no pending needs:* labels, and required checks are marked done.');
