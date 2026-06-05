@@ -67,8 +67,8 @@ next-env.d.ts
 .env.example
 /openspec
 .openspec
-/.continue/*
-/.copilot/*
-/.github/*
-/.mintlify/*
-/.squad/*
+.continue/*
+.copilot/*
+.github/*
+.mintlify/*
+.squad/*
